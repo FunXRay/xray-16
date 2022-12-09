@@ -32,16 +32,7 @@
 
 struct lua_State;
 
-namespace luabind
-{
-
-#if LUA_VERSION_NUM >= 501
-#define LUA_REFNIL (-1)
-#undef luaL_setn
-#undef luaL_getn
-#endif
-
-namespace detail
+namespace luabind { namespace detail
 {
 
 	int LUABIND_API ref(lua_State *L);

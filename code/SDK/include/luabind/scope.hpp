@@ -45,7 +45,7 @@ namespace luabind { namespace detail {
         virtual void register_(lua_State*) const = 0;
 
     private:
-        friend struct ::luabind::scope;
+        friend struct scope;
         registration* m_next;
     };
 

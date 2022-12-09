@@ -20,68 +20,52 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-
-#ifndef LUABIND_COPY_POLICY_HPP_INCLUDED
-#define LUABIND_COPY_POLICY_HPP_INCLUDED
+#ifndef LUABIND_COM_POLICY_HPP_INCLUDED
+#define LUABIND_COM_POLICY_HPP_INCLUDED
 
 #include <luabind/config.hpp>
-
-#include <boost/type_traits/is_pointer.hpp>
-#include <boost/type_traits/is_reference.hpp>
 #include <luabind/detail/policy.hpp>
+#include <luabind/detail/implicit_cast.hpp>
 
-namespace luabind { namespace detail {
+namespace luabind { namespace detail 
+{
+	template<class Direction = lua_to_cpp>
+	struct COM_ptr_converter;
 
-	struct copy_pointer_to
+	template<class T>
+	struct COM_release
+	{
+		static void release(void* ptr)
+		{
+			T* obj = static_cast<T*>(ptr);
+			obj->Release();
+		}
+	};
+
+	template<>
+	struct COM_ptr_converter<cpp_to_lua>
 	{
 		template<class T>
-		void apply(lua_State* L, const T* ptr)
+		void apply(lua_State* L, T* ptr)
 		{
-			if (ptr == 0) 
+			if (ptr == 0)
 			{
 				lua_pushnil(L);
 				return;
 			}
 
 			class_registry* registry = class_registry::get_registry(L);
-
 			class_rep* crep = registry->find_class(LUABIND_TYPEID(T));
 
 			// if you get caught in this assert you are trying
 			// to use an unregistered type
 			assert(crep && "you are trying to use an unregistered type");
 
-			T* copied_obj = luabind_new<T>(*ptr);
-
 			// create the struct to hold the object
 			void* obj = lua_newuserdata(L, sizeof(object_rep));
-			// we send 0 as destructor since we know it will never be called
-			new(obj) object_rep(copied_obj, crep, object_rep::owner, delete_s<T>::apply);
+			new(obj) object_rep(ptr, crep, object_rep::owner, COM_release<T>::release);
 
-			// set the meta table
-			detail::getref(L, crep->metatable_ref());
-			lua_setmetatable(L, -2);
-		}
-	};
-
-	struct copy_reference_to
-	{
-		template<class T>
-		void apply(lua_State* L, const T& ref)
-		{
-			class_registry* registry = class_registry::get_registry(L);
-			class_rep* crep = registry->find_class(LUABIND_TYPEID(T));
-
-			// if you get caught in this assert you are trying
-			// to use an unregistered type
-			assert(crep && "you are trying to use an unregistered type");
-
-			T* copied_obj = luabind_new<T>(ref);
-
-			// create the struct to hold the object
-			void* obj = lua_newuserdata(L, sizeof(object_rep));
-			// we send 0 as destructor since we know it will never be called
-			new(obj) object_rep(copied_obj, crep, object_rep::owner, delete_s<T>::apply);
+			ptr->AddRef();
 
 			// set the meta table
 			detail::getref(L, crep->metatable_ref());
@@ -90,34 +74,29 @@ namespace luabind { namespace detail {
 	};
 
 	template<int N>
-	struct copy_policy : conversion_policy<N>
+	struct COM_policy : conversion_policy<N>
 	{
-		struct only_accepts_pointers_or_references {};
-		struct only_converts_from_cpp_to_lua {};
-
 		static void precall(lua_State*, const index_map&) {}
 		static void postcall(lua_State*, const index_map&) {}
 
 		template<class T, class Direction>
 		struct generate_converter
 		{
-			typedef typename boost::mpl::if_<boost::is_same<Direction, cpp_to_lua>
-					, typename boost::mpl::if_<boost::is_pointer<T>
-						,	copy_pointer_to
-						,	typename boost::mpl::if_<boost::is_reference<T>
-								,	copy_reference_to
-								,	only_accepts_pointers_or_references>::type>::type
-					, only_converts_from_cpp_to_lua>::type type;
+			typedef COM_ptr_converter<cpp_to_lua> type;
 		};
 	};
+
 }}
 
 namespace luabind
 {
 	template<int N>
-	detail::policy_cons<detail::copy_policy<N>, detail::null_type> 
-	copy(boost::arg<N>) { return detail::policy_cons<detail::copy_policy<N>, detail::null_type>(); }
+	detail::policy_cons<detail::COM_policy<N>, detail::null_type> 
+	COM_managed(boost::arg<N>) { return detail::policy_cons<detail::COM_policy<N>, detail::null_type>(); }
 }
 
-#endif // LUABIND_COPY_POLICY_HPP_INCLUDED
+#endif // LUABIND_COM_POLICY_HPP_INCLUDED
+
+
+function(L, "createCar", &createCar, COM_managed(result));
 

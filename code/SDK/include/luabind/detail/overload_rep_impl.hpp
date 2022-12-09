@@ -1,4 +1,4 @@
-// Copyright (c) 2005 Daniel Wallin and Arvid Norberg
+// Copyright (c) 2003 Daniel Wallin and Arvid Norberg
 
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -20,33 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if !BOOST_PP_IS_ITERATING
-# error Do not include object_call.hpp directly!
-#endif
+#ifndef LUABIND_OVERLOAD_REP_IMPL_HPP_INCLUDED
+#define LUABIND_OVERLOAD_REP_IMPL_HPP_INCLUDED
 
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/repetition/enum_binary_params.hpp>
-#include <boost/preprocessor/facilities/intercept.hpp>
+#include <luabind/detail/overload_rep.hpp>
 
-#define N BOOST_PP_ITERATION()
-
-template<BOOST_PP_ENUM_PARAMS(N, class A)>
-call_proxy<
-    Derived
-  , boost::tuples::tuple<
-        BOOST_PP_ENUM_BINARY_PARAMS(N, A, const* BOOST_PP_INTERCEPT)
-    >
-> operator()(BOOST_PP_ENUM_BINARY_PARAMS(N, A, const& a))
+namespace luabind { namespace detail
 {
-    typedef boost::tuples::tuple<
-        BOOST_PP_ENUM_BINARY_PARAMS(N, A, const* BOOST_PP_INTERCEPT)
-    > arguments;
+	inline int overload_rep::call(lua_State* L, bool force_static_call) const 
+	{ 
+		if (force_static_call)
+			return call_fun_static(L);
+		else
+			return call_fun(L);
+	}
 
-    return call_proxy<Derived, arguments>(
-        derived()
-      , arguments(BOOST_PP_ENUM_PARAMS(N, &a))
-    );
-}
+}} // namespace luabind::detail
 
-#undef N
-
+#endif // LUABIND_OVERLOAD_REP_IMPL_HPP_INCLUDED

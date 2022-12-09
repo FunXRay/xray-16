@@ -9,8 +9,6 @@
 #ifndef LUABIND_LIBRARY_LINKAGE_H_INCLUDED
 #define LUABIND_LIBRARY_LINKAGE_H_INCLUDED
 
-#include <cs/library_names.h>
-
-#pragma comment(lib, CS_LIBRARY_NAME( luabind.0.8.1, lib ) )
+#pragma comment(lib, "luabind.beta7-devel.rc4.lib" )
 
 #endif // #ifndef LUABIND_LIBRARY_LINKAGE_H_INCLUDED

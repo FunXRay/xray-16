@@ -9,17 +9,14 @@
 #ifndef LUABIND_MEMORY_H_INCLUDED
 #define LUABIND_MEMORY_H_INCLUDED
 
-#if CS_DEBUG_LIBRARIES
+#ifdef DEBUG
 #	ifdef NDEBUG
-#		error do not define NDEBUG macro in DEBUG configuration since luabind classes are sensisitve to this
+		STATIC_CHECK(false,Do_not_define_NDEBUG_macros_in_DEBUG_configuration_since_luabind_classes_are_sensisitve_to_it)
 #	endif // #ifdef NDEBUG
-#endif // #if CS_DEBUG_LIBRARIES
+#endif // #ifdef DEBUG
 
 #include <luabind/luabind_types.h>
 #include <boost/type_traits/is_polymorphic.hpp>
-
-
-void mega_fooo();
 
 namespace luabind {
 	extern LUABIND_API	memory_allocation_function_pointer		allocator;

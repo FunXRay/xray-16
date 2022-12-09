@@ -29,16 +29,17 @@
 
 #include <luabind/config.hpp>
 #include <luabind/detail/class_rep.hpp>
-#include <boost/noncopyable.hpp>
 
 namespace luabind
 {
+	struct value;
 
 	struct value_vector;
 
 	struct value
 	{
-	friend class luabind::vector<value>;
+		friend class vector_class<value>;
+
 		template<class T>
 		value(const char* name, T v)
 			: name_(name)
@@ -55,7 +56,7 @@ namespace luabind
 		value() {}
 	};
 
-	struct value_vector : public luabind::vector<value>
+	struct value_vector : public vector_class<value>
 	{
 		// a bug in intel's compiler forces us to declare these constructors explicitly.
 		value_vector();
@@ -64,7 +65,7 @@ namespace luabind
 		value_vector& operator,(const value& rhs);
 	};
 
-	inline value_vector value::operator, (const value& rhs) const
+	inline value_vector value::operator,(const value& rhs) const
 	{
 		value_vector v;
 
@@ -75,14 +76,14 @@ namespace luabind
 	}
 
 	inline value_vector::value_vector()
-		: luabind::vector<value>()
+		: vector_class<value>()
 	{
 	}
 
 	inline value_vector::~value_vector() {}
 
 	inline value_vector::value_vector(const value_vector& rhs)
-		: luabind::vector<value>(rhs)
+		: vector_class<value>(rhs)
 	{
 	}
 
@@ -95,7 +96,7 @@ namespace luabind
 	namespace detail
 	{
 		template<class From>
-		struct enum_maker : private boost::noncopyable
+		struct enum_maker
 		{
 			explicit enum_maker(From& from): from_(from) {}
 
@@ -105,6 +106,11 @@ namespace luabind
 				return from_;
 			}
 			
+			enum_maker<From>& operator=(const enum_maker<From> &val)
+			{
+				return 	(*this = val);
+			}
+
 			From& operator[](const value_vector& values)
 			{
 				for (value_vector::const_iterator i = values.begin(); i != values.end(); ++i)

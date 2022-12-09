@@ -11,8 +11,6 @@
 
 namespace luabind {
 
-inline void* call_allocator	(void const* buffer, size_t const size);
-
 template <class T>
 class memory_allocator {
 private:

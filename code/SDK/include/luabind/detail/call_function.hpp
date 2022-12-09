@@ -100,7 +100,8 @@ namespace luabind
 
 						assert(0 && "the lua function threw an error and exceptions are disabled."
 									" If you want to handle the error you can use luabind::set_error_callback()");
-						abort();
+						std::terminate();
+
 #endif
 					}
 
@@ -110,7 +111,7 @@ namespace luabind
 
 				operator Ret()
 				{
-					typename mpl::apply_wrap2<default_policy,Ret,lua_to_cpp>::type converter;
+					typename default_policy::template generate_converter<Ret, lua_to_cpp>::type converter;
 
 					m_called = true;
 					lua_State* L = m_state;
@@ -129,7 +130,7 @@ namespace luabind
 	
 						assert(0 && "the lua function threw an error and exceptions are disabled."
 								" If you want to handle the error you can use luabind::set_error_callback()");
-			  			abort();
+						std::terminate();
 #endif
 					}
 
@@ -148,7 +149,8 @@ namespace luabind
 
 						assert(0 && "the lua function's return value could not be converted."
 									" If you want to handle the error you can use luabind::set_error_callback()");
-			  			abort();
+						std::terminate();
+
 #endif
 					}
 #endif
@@ -159,7 +161,7 @@ namespace luabind
 				Ret operator[](const Policies& p)
 				{
 					typedef typename detail::find_conversion_policy<0, Policies>::type converter_policy;
-					typename mpl::apply_wrap2<converter_policy,Ret,lua_to_cpp>::type converter;
+					typename converter_policy::template generate_converter<Ret, lua_to_cpp>::type converter;
 
 					m_called = true;
 					lua_State* L = m_state;
@@ -178,7 +180,7 @@ namespace luabind
 	
 						assert(0 && "the lua function threw an error and exceptions are disabled."
 								" If you want to handle the error you can use luabind::set_error_callback()");
-			  			abort();
+						std::terminate();
 #endif
 					}
 
@@ -197,7 +199,8 @@ namespace luabind
 
 						assert(0 && "the lua function's return value could not be converted."
 									" If you want to handle the error you can use luabind::set_error_callback()");
-			  			abort();
+						std::terminate();
+
 #endif
 					}
 #endif
@@ -267,7 +270,7 @@ namespace luabind
 	
 						assert(0 && "the lua function threw an error and exceptions are disabled."
 								" If you want to handle the error you can use luabind::set_error_callback()");
-			  			abort();
+						std::terminate();
 #endif
 					}
 					// pops the return values from the function call
@@ -294,7 +297,7 @@ namespace luabind
 	
 						assert(0 && "the lua function threw an error and exceptions are disabled."
 							" If you want to handle the error you can use luabind::set_error_callback()");
-			  			abort();
+						std::terminate();
 #endif
 					}
 					// pops the return values from the function call
@@ -365,8 +368,8 @@ namespace luabind
 			, luabind::detail::proxy_function_void_caller<boost::tuples::tuple<BOOST_PP_ENUM(BOOST_PP_ITERATION(), LUABIND_TUPLE_PARAMS, _)> >
 			, luabind::detail::proxy_function_caller<Ret, boost::tuples::tuple<BOOST_PP_ENUM(BOOST_PP_ITERATION(), LUABIND_TUPLE_PARAMS, _)> > >::type proxy_type;
 
-		obj.push(obj.interpreter());
-		return proxy_type(obj.interpreter(), 1, &detail::pcall, args);
+		obj.pushvalue();
+		return proxy_type(obj.lua_state(), 1, &detail::pcall, args);
 	}
 
 	template<class Ret BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), class A)>
@@ -408,8 +411,8 @@ namespace luabind
 			, luabind::detail::proxy_function_void_caller<boost::tuples::tuple<BOOST_PP_ENUM(BOOST_PP_ITERATION(), LUABIND_TUPLE_PARAMS, _)> >
 			, luabind::detail::proxy_function_caller<Ret, boost::tuples::tuple<BOOST_PP_ENUM(BOOST_PP_ITERATION(), LUABIND_TUPLE_PARAMS, _)> > >::type proxy_type;
 
-		obj.push(obj.interpreter());
-		return proxy_type(obj.interpreter(), 1, &detail::resume_impl, args);
+		obj.pushvalue();
+		return proxy_type(obj.lua_state(), 1, &detail::resume_impl, args);
 	}
 
 	template<class Ret BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), class A)>

@@ -32,15 +32,11 @@
 #include <luabind/detail/debug.hpp>
 #include <luabind/detail/stack_utils.hpp>
 
-#include <boost/mpl/apply_wrap.hpp>
-
 namespace luabind
 {
 
 	namespace detail
 	{
-
-		namespace mpl = boost::mpl;
 
 		template<class T, class Obj, class Policies>
 		inline T object_cast_impl(const Obj& obj, const Policies&)
@@ -55,14 +51,14 @@ namespace luabind
 				if (e) e(L, LUABIND_TYPEID(T));
 
 				assert(0 && "object_cast failed. If you want to handle this error use luabind::set_error_callback()");
-	  			abort();
+				std::terminate();
 #endif
 			}
 
 			LUABIND_CHECK_STACK(obj.lua_state());
 
 			typedef typename detail::find_conversion_policy<0, Policies>::type converter_policy;
-			typename mpl::apply_wrap2<converter_policy,T,lua_to_cpp>::type converter;
+			typename converter_policy::template generate_converter<T, lua_to_cpp>::type converter;
 
 			obj.pushvalue();
 
@@ -80,7 +76,7 @@ namespace luabind
 				if (e) e(L, LUABIND_TYPEID(T));
 
 				assert(0 && "object_cast failed. If you want to handle this error use luabind::set_error_callback()");
-	  			abort();
+				std::terminate();
 #endif
 			}
 #endif
@@ -92,7 +88,7 @@ namespace luabind
 		boost::optional<T> object_cast_nothrow_impl(const Obj& obj, const Policies&)
 		{
 			typedef typename detail::find_conversion_policy<0, Policies>::type converter_policy;
-			typename mpl::apply_wrap2<converter_policy,T,lua_to_cpp>::type converter;
+			typename converter_policy::template generate_converter<T, lua_to_cpp>::type converter;
 
 			if (obj.lua_state() == 0) return boost::optional<T>();
 			LUABIND_CHECK_STACK(obj.lua_state());
@@ -113,11 +109,11 @@ namespace luabind
 	}
 	
 	template<class T>
-	inline T object_cast(const object& obj)
+	T object_cast(const object& obj)
 	{ return detail::object_cast_impl<T>(obj, detail::null_type()); }
 	
 	template<class T, class Policies>
-	inline T object_cast(const object& obj, const Policies& p)
+	T object_cast(const object& obj, const Policies& p)
 	{ return detail::object_cast_impl<T>(obj, p); }
 	
 	template<class T>
@@ -130,11 +126,11 @@ namespace luabind
 	
 
 	template<class T>
-	inline T object_cast(const detail::proxy_object& obj)
+	T object_cast(const detail::proxy_object& obj)
 	{ return detail::object_cast_impl<T>(obj, detail::null_type()); }
 	
 	template<class T, class Policies>
-	inline T object_cast(const detail::proxy_object& obj, const Policies& p)
+	T object_cast(const detail::proxy_object& obj, const Policies& p)
 	{ return detail::object_cast_impl<T>(obj, p); }
 	
 	template<class T>
@@ -147,11 +143,11 @@ namespace luabind
 
 	
 	template<class T>
-	inline T object_cast(const detail::proxy_raw_object& obj)
+	T object_cast(const detail::proxy_raw_object& obj)
 	{ return detail::object_cast_impl<T>(obj, detail::null_type()); }
 
 	template<class T, class Policies>
-	inline T object_cast(const detail::proxy_raw_object& obj, const Policies& p)
+	T object_cast(const detail::proxy_raw_object& obj, const Policies& p)
 	{ return detail::object_cast_impl<T>(obj, p); }
 
 	template<class T>
@@ -164,11 +160,11 @@ namespace luabind
 
 	
 	template<class T>
-	inline T object_cast(const detail::proxy_array_object& obj)
+	T object_cast(const detail::proxy_array_object& obj)
 	{ return detail::object_cast_impl<T>(obj, detail::null_type()); }
 	
 	template<class T, class Policies>
-	inline T object_cast(const detail::proxy_array_object& obj, const Policies& p)
+	T object_cast(const detail::proxy_array_object& obj, const Policies& p)
 	{ return detail::object_cast_impl<T>(obj, p); }
 	
 	template<class T>
@@ -217,7 +213,7 @@ object f = class_<A>();
 
 A* ptr = object_cast<A*>(f(), adopt(_1));
 
-delete ptr;
+custom_delete	(ptr);
 
 */
 

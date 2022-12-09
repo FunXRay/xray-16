@@ -25,7 +25,6 @@
 #define LUABIND_PRIMITIVES_HPP_INCLUDED
 
 #include <algorithm>
-#include <cstring>
 
 #include <luabind/config.hpp>
 #include <luabind/detail/yes_no.hpp>
@@ -39,7 +38,7 @@ namespace luabind { namespace detail
 	};
 
 	template<class T>
-    struct type_ {};
+	struct type {};
 
 	struct null_type {};
 
@@ -65,6 +64,14 @@ namespace luabind { namespace detail
 #pragma warning(pop)
 	};
 
+//	inline char* dup_string(const char* s)
+//	{
+//		std::size_t l = std::strlen(s);
+//		char* c = new char[l+1];
+//		std::copy(s, s+l+1, c);
+//		return c;
+//	}
+
 	template<int N>
 	struct aligned 
 	{
@@ -74,7 +81,7 @@ namespace luabind { namespace detail
 	// returns the offset added to a Derived* when cast to a Base*
 	// TODO: return ptrdiff
 	template<class Derived, class Base>
-	int ptr_offset(type_<Derived>, type_<Base>)
+	int ptr_offset(type<Derived>, type<Base>)
 	{
 		aligned<sizeof(Derived)> obj;
 		Derived* ptr = reinterpret_cast<Derived*>(&obj);

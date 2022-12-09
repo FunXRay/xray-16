@@ -106,8 +106,6 @@ namespace luabind { namespace detail
 	{
 		static void apply(void* ptr)
 		{
-			// Removes unreferenced formal parameter warning on VC7.
-			(void)ptr;
 #ifndef NDEBUG
 			int completeness_check[sizeof(T)];
 			(void)completeness_check;

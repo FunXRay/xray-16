@@ -45,14 +45,9 @@ struct BOOST_PP_CAT(call_operator, N)
             BOOST_PP_ENUM_TRAILING(N, LUABIND_UNWRAP_PARAMETER, _)
         )
         {
-            using namespace detail;
-            operator_result(
+            detail::operator_result(
                 L
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
-              , self(BOOST_PP_ENUM_PARAMS(N, _))
-#else
               , (self(BOOST_PP_ENUM_PARAMS(N, _)), detail::operator_void_return())
-#endif
               , (Policies*)0
             );
         } 
@@ -62,5 +57,4 @@ struct BOOST_PP_CAT(call_operator, N)
 };
 
 #undef LUABIND_UNWRAP_PARAMETER
-#undef N
 

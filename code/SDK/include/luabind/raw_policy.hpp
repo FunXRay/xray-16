@@ -51,7 +51,7 @@ namespace luabind { namespace detail  {
 		static void postcall(lua_State*, const index_map&) {}
 
 		template<class T, class Direction>
-		struct apply
+		struct generate_converter
 		{
 			typedef raw_converter type;
 		};
@@ -66,7 +66,7 @@ namespace luabind {
 		detail::raw_policy<N>
 	  , detail::null_type
 	>
-	inline raw(LUABIND_PLACEHOLDER_ARG(N))
+	inline raw(boost::arg<N>) 
 	{ 
 		return detail::policy_cons<
 			detail::raw_policy<N>
