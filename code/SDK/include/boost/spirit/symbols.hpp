@@ -1,27 +1,22 @@
 /*=============================================================================
-  Copyright (c) 2001-2008 Joel de Guzman
-  Copyright (c) 2001-2008 Hartmut Kaiser
-  http://spirit.sourceforge.net/
+    Spirit v1.6.0
+    Copyright (c) 2001-2003 Joel de Guzman
+    http://spirit.sourceforge.net/
 
-  Distributed under the Boost Software License, Version 1.0. (See accompanying
-  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+    Permission to copy, use, modify, sell and distribute this software is
+    granted provided this copyright notice appears in all copies. This
+    software is provided "as is" without express or implied warranty, and
+    with no claim as to its suitability for any purpose.
 =============================================================================*/
-#ifndef BOOST_SPIRIT_DEPRECATED_INCLUDE_SYMBOLS
-#define BOOST_SPIRIT_DEPRECATED_INCLUDE_SYMBOLS
+#if !defined(BOOST_SPIRIT_SYMBOLS_MAIN_HPP)
+#define BOOST_SPIRIT_SYMBOLS_MAIN_HPP
 
-#include <boost/version.hpp>
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Master header for Spirit.Symbols
+//
+///////////////////////////////////////////////////////////////////////////////
 
-#if BOOST_VERSION >= 103800
-#if defined(_MSC_VER) || defined(__BORLANDC__) || defined(__DMC__)
-#  pragma message ("Warning: This header is deprecated. Please use: boost/spirit/include/classic_symbols.hpp")
-#elif defined(__GNUC__) || defined(__HP_aCC) || defined(__SUNPRO_CC) || defined(__IBMCPP__)
-#  warning "This header is deprecated. Please use: boost/spirit/include/classic_symbols.hpp"
-#endif
-#endif
+#include "boost/spirit/symbols/symbols.hpp"
 
-#if !defined(BOOST_SPIRIT_USE_OLD_NAMESPACE)
-#define BOOST_SPIRIT_USE_OLD_NAMESPACE
-#endif
-#include <boost/spirit/include/classic_symbols.hpp>
-
-#endif
+#endif // !defined(BOOST_SPIRIT_SYMBOLS_MAIN_HPP)

@@ -1,17 +1,23 @@
 /* Boost interval/detail/c99sub_rounding_control.hpp file
  *
- * Copyright 2000 Jens Maurer
- * Copyright 2002 Hervé Brönnimann, Guillaume Melquiond, Sylvain Pion
+ * Copyright Jens Maurer 2000
+ * Copyright Hervé Brönnimann, Guillaume Melquiond, Sylvain Pion 2002
+ * Permission to use, copy, modify, sell, and distribute this software
+ * is hereby granted without fee provided that the above copyright notice
+ * appears in all copies and that both that copyright notice and this
+ * permission notice appear in supporting documentation,
  *
- * Distributed under the Boost Software License, Version 1.0.
- * (See accompanying file LICENSE_1_0.txt or
- * copy at http://www.boost.org/LICENSE_1_0.txt)
+ * None of the above authors nor Polytechnic University make any
+ * representation about the suitability of this software for any
+ * purpose. It is provided "as is" without express or implied warranty.
+ *
+ * $Id: c99sub_rounding_control.hpp,v 1.2 2003/02/05 17:34:32 gmelquio Exp $
  */
 
 #ifndef BOOST_NUMERIC_INTERVAL_DETAIL_C99SUB_ROUNDING_CONTROL_HPP
 #define BOOST_NUMERIC_INTERVAL_DETAIL_C99SUB_ROUNDING_CONTROL_HPP
 
-#include <boost/detail/fenv.hpp>      // ISO C 99 rounding mode control
+#include <fenv.h>      // ISO C 99 rounding mode control
 
 namespace boost {
 namespace numeric {
@@ -20,11 +26,11 @@ namespace detail {
 
 extern "C" { double rint(double); }
 
-struct c99_rounding_control
+struct c99_rounding
 {
   typedef int rounding_mode;
 
-  static void set_rounding_mode(rounding_mode mode)  { fesetround(mode); }
+  static void set_rounding_mode(const rounding_mode mode) { fesetround(mode); }
   static void get_rounding_mode(rounding_mode &mode) { mode = fegetround(); }
   static void downward()    { set_rounding_mode(FE_DOWNWARD);   }
   static void upward()      { set_rounding_mode(FE_UPWARD);     }

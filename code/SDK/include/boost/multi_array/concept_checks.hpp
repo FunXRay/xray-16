@@ -1,14 +1,14 @@
-// Copyright 2002 The Trustees of Indiana University.
-
-// Use, modification and distribution is subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
-
-//  Boost.MultiArray Library
-//  Authors: Ronald Garcia
-//           Jeremy Siek
-//           Andrew Lumsdaine
-//  See http://www.boost.org/libs/multi_array for documentation.
+// Copyright (C) 2002 Ronald Garcia
+//
+// Permission to copy, use, sell and distribute this software is granted
+// provided this copyright notice appears in all copies. 
+// Permission to modify the code and to distribute modified code is granted
+// provided this copyright notice appears in all copies, and a notice 
+// that the code was modified is included with the copyright notice.
+//
+// This software is provided "as is" without express or implied warranty, 
+// and with no claim as to its suitability for any purpose.
+//
 
 #ifndef BOOST_MULTI_ARRAY_CONCEPT_CHECKS_RG110101_HPP
 #define BOOST_MULTI_ARRAY_CONCEPT_CHECKS_RG110101_HPP
@@ -19,12 +19,11 @@
 //
 
 #include "boost/concept_check.hpp"
-#include "boost/iterator/iterator_concepts.hpp"
 
 namespace boost {
-namespace multi_array_concepts {
-
 namespace detail {
+namespace multi_array {
+
   //
   // idgen_helper -
   //   This is a helper for generating index_gen instantiations with
@@ -56,30 +55,23 @@ namespace detail {
     }
   };
 
-} // namespace detail
-
 
   template <typename Array, std::size_t NumDims >
   struct ConstMultiArrayConcept
   {
     void constraints() {
-    //    function_requires< CopyConstructibleConcept<Array> >();
-    function_requires< boost_concepts::ForwardTraversalConcept<iterator> >();
-    function_requires< boost_concepts::ReadableIteratorConcept<iterator> >();
-    function_requires< boost_concepts::ForwardTraversalConcept<const_iterator> >();
-    function_requires< boost_concepts::ReadableIteratorConcept<const_iterator> >();
+      //    function_requires< CopyConstructibleConcept<Array> >();
 
       // RG - a( CollectionArchetype) when available...
       a[ id ];
       // Test slicing, keeping only the first dimension, losing the rest
-      detail::idgen_helper<NumDims-1>::call(a,idgen[range],id);
+      idgen_helper<NumDims-1>::call(a,idgen[range],id);
 
       // Test slicing, keeping all dimensions.
-      detail::idgen_helper<NumDims-1>::call(a,idgen[range],range);
+      idgen_helper<NumDims-1>::call(a,idgen[range],range);
 
       st = a.size();
       st = a.num_dimensions();
-      st = Array::dimensionality;
       st = a.num_elements();
       stp = a.shape();
       idp = a.strides();
@@ -126,20 +118,14 @@ namespace detail {
     void constraints() {
       //    function_requires< CopyConstructibleConcept<Array> >();
 
-      function_requires< boost_concepts::ForwardTraversalConcept<iterator> >();
-      function_requires< boost_concepts::ReadableIteratorConcept<iterator> >();
-      function_requires< boost_concepts::WritableIteratorConcept<iterator> >();
-      function_requires< boost_concepts::ForwardTraversalConcept<const_iterator> >();
-      function_requires< boost_concepts::ReadableIteratorConcept<const_iterator> >();
-      
       // RG - a( CollectionArchetype) when available...
       value_type vt = a[ id ];
 
       // Test slicing, keeping only the first dimension, losing the rest
-      detail::idgen_helper<NumDims-1>::call(a,idgen[range],id);
+      idgen_helper<NumDims-1>::call(a,idgen[range],id);
 
       // Test slicing, keeping all dimensions.
-      detail::idgen_helper<NumDims-1>::call(a,idgen[range],range);
+      idgen_helper<NumDims-1>::call(a,idgen[range],range);
 
       st = a.size();
       st = a.num_dimensions();
@@ -160,10 +146,10 @@ namespace detail {
       //      value_type vt = a[ id ];
 
       // Test slicing, keeping only the first dimension, losing the rest
-      detail::idgen_helper<NumDims-1>::call(a,idgen[range],id);
+      idgen_helper<NumDims-1>::call(a,idgen[range],id);
 
       // Test slicing, keeping all dimensions.
-      detail::idgen_helper<NumDims-1>::call(a,idgen[range],range);
+      idgen_helper<NumDims-1>::call(a,idgen[range],range);
 
       st = a.size();
       st = a.num_dimensions();
@@ -210,14 +196,7 @@ namespace detail {
 
 
 } // namespace multi_array
-
-namespace detail {
-  namespace multi_array { // Old locations for these
-    using boost::multi_array_concepts::ConstMultiArrayConcept;
-    using boost::multi_array_concepts::MutableMultiArrayConcept;
-  }
-}
-
+} // namespace detail
 } // namespace boost
 
 

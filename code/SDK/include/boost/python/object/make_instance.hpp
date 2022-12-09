@@ -1,18 +1,14 @@
-// Copyright David Abrahams 2002.
-// Distributed under the Boost Software License, Version 1.0. (See
-// accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+// Copyright David Abrahams 2002. Permission to copy, use,
+// modify, sell and distribute this software is granted provided this
+// copyright notice appears in all copies. This software is provided
+// "as is" without express or implied warranty, and with no claim as
+// to its suitability for any purpose.
 #ifndef MAKE_INSTANCE_DWA200296_HPP
 # define MAKE_INSTANCE_DWA200296_HPP
 
-# include <boost/python/detail/prefix.hpp>
 # include <boost/python/object/instance.hpp>
 # include <boost/python/converter/registered.hpp>
 # include <boost/python/detail/decref_guard.hpp>
-# include <boost/python/detail/none.hpp>
-# include <boost/mpl/assert.hpp>
-# include <boost/mpl/or.hpp>
-# include <boost/type_traits/is_union.hpp>
 
 namespace boost { namespace python { namespace objects { 
 
@@ -24,12 +20,9 @@ struct make_instance_impl
     template <class Arg>
     static inline PyObject* execute(Arg& x)
     {
-        BOOST_MPL_ASSERT((mpl::or_<is_class<T>, is_union<T> >));
+        BOOST_STATIC_ASSERT(is_class<T>::value);
 
         PyTypeObject* type = Derived::get_class_object(x);
-
-        if (type == 0)
-            return python::detail::none();
 
         PyObject* raw_result = type->tp_alloc(
             type, objects::additional_instance_size<Holder>::value);
@@ -46,7 +39,7 @@ struct make_instance_impl
               
             // Note the position of the internally-stored Holder,
             // for the sake of destruction
-            Py_SIZE(instance) = offsetof(instance_t, storage);
+            instance->ob_size = offsetof(instance_t, storage);
 
             // Release ownership of the python object
             protect.cancel();

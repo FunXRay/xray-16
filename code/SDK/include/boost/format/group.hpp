@@ -1,29 +1,35 @@
 
+// -*- C++ -*-
+//  Boost general library 'format'   ---------------------------
+//  See http://www.boost.org for updates, documentation, and revision history.
+
+//  (C) Samuel Krempp 2001
+//                  krempp@crans.ens-cachan.fr
+//  Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+
+// ideas taken from Rüdiger Loos's format class
+// and Karl Nelson's ofstream
+
 // ----------------------------------------------------------------------------
+
 // group.hpp :  encapsulates a group of manipulators along with an argument
-// ----------------------------------------------------------------------------
-
-//  Copyright Samuel Krempp 2003. Use, modification, and distribution are
-//  subject to the Boost Software License, Version 1.0. (See accompanying
-//  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-
-//  See http://www.boost.org/libs/format for library home page
-
-// ----------------------------------------------------------------------------
-
-                      
+//                      
 // group_head : cut the last element of a group out.
 // (is overloaded below on each type of group)
 
 // group_last : returns the last element of a group
 // (is overloaded below on each type of group)
+
 // ----------------------------------------------------------------------------
 
 
 #ifndef BOOST_FORMAT_GROUP_HPP
 #define BOOST_FORMAT_GROUP_HPP
 
-#include <boost/config.hpp>
+#include "boost/config.hpp"
 
 
 namespace boost {
@@ -55,8 +61,6 @@ struct group1
     group1(T1 a1)
       : a1_(a1)
       {}
-private:
-   group1& operator=(const group1&);
 };
 
 template <class Ch, class Tr, class T1>
@@ -80,8 +84,6 @@ struct group2
     group2(T1 a1,T2 a2)
       : a1_(a1),a2_(a2)
       {}
-private:
-   group2& operator=(const group2&);
 };
 
 template <class Ch, class Tr, class T1,class T2>
@@ -103,8 +105,6 @@ struct group3
     group3(T1 a1,T2 a2,T3 a3)
       : a1_(a1),a2_(a2),a3_(a3)
       {}
-private:
-   group3& operator=(const group3&);
 };
 
 template <class Ch, class Tr, class T1,class T2,class T3>
@@ -127,8 +127,6 @@ struct group4
     group4(T1 a1,T2 a2,T3 a3,T4 a4)
       : a1_(a1),a2_(a2),a3_(a3),a4_(a4)
       {}
-private:
-   group4& operator=(const group4&);
 };
 
 template <class Ch, class Tr, class T1,class T2,class T3,class T4>
@@ -673,7 +671,7 @@ detail::group1< detail::group10<T1,T2,T3,T4,T5,T6,T7,T8,T9, Var&> >
 }
 
 
-#endif  // - BOOST_NO_OVERLOAD_FOR_NON_CONST
+#endif  //end- #ifndef BOOST_NO_OVERLOAD_FOR_NON_CONST
 
 
 } // namespace io

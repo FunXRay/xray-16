@@ -1,15 +1,16 @@
 //  Boost math_fwd.hpp header file  ------------------------------------------//
 
-//  (C) Copyright Hubert Holin and Daryle Walker 2001-2002.  Distributed under the Boost
-//  Software License, Version 1.0. (See accompanying file
-//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//  (C) Copyright boost.org 2001-2002.  Permission to copy, use, modify, sell
+//  and distribute this software is granted provided this copyright
+//  notice appears in all copies.  This software is provided "as is" without
+//  express or implied warranty, and with no claim as to its suitability for
+//  any purpose.
 
 //  See http://www.boost.org/libs/math for documentation.
 
 #ifndef BOOST_MATH_FWD_HPP
 #define BOOST_MATH_FWD_HPP
 
-#include <boost/cstdint.hpp>
 
 namespace boost
 {
@@ -79,15 +80,9 @@ template < >
 
 //  From <boost/math/common_factor_ct.hpp>  ----------------------------------//
 
-#ifdef BOOST_NO_INTEGRAL_INT64_T
-     typedef unsigned long static_gcd_type;
-#else
-     typedef boost::uintmax_t static_gcd_type;
-#endif
-
-template < static_gcd_type Value1, static_gcd_type Value2 >
+template < unsigned long Value1, unsigned long Value2 >
     struct static_gcd;
-template < static_gcd_type Value1, static_gcd_type Value2 >
+template < unsigned long Value1, unsigned long Value2 >
     struct static_lcm;
 
 

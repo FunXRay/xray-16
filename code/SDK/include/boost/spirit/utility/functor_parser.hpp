@@ -1,27 +1,69 @@
 /*=============================================================================
-  Copyright (c) 2001-2008 Joel de Guzman
-  Copyright (c) 2001-2008 Hartmut Kaiser
-  http://spirit.sourceforge.net/
+    Spirit v1.6.0
+    Copyright (c) 2002-2003 Joel de Guzman
+    Copyright (c) 2002-2003 Juan Carlos Arevalo-Baeza
+    http://spirit.sourceforge.net/
 
-  Distributed under the Boost Software License, Version 1.0. (See accompanying
-  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+    Permission to copy, use, modify, sell and distribute this software is
+    granted provided this copyright notice appears in all copies. This
+    software is provided "as is" without express or implied warranty, and
+    with no claim as to its suitability for any purpose.
 =============================================================================*/
-#ifndef BOOST_SPIRIT_DEPRECATED_INCLUDE_FUNCTOR_PARSER
-#define BOOST_SPIRIT_DEPRECATED_INCLUDE_FUNCTOR_PARSER
+#ifndef BOOST_SPIRIT_FUNCTOR_PARSER_HPP
+#define BOOST_SPIRIT_FUNCTOR_PARSER_HPP
 
-#include <boost/version.hpp>
+///////////////////////////////////////////////////////////////////////////////
+#include "boost/spirit/core/parser.hpp"
 
-#if BOOST_VERSION >= 103800
-#if defined(_MSC_VER) || defined(__BORLANDC__) || defined(__DMC__)
-#  pragma message ("Warning: This header is deprecated. Please use: boost/spirit/include/classic_functor_parser.hpp")
-#elif defined(__GNUC__) || defined(__HP_aCC) || defined(__SUNPRO_CC) || defined(__IBMCPP__)
-#  warning "This header is deprecated. Please use: boost/spirit/include/classic_functor_parser.hpp"
-#endif
-#endif
+///////////////////////////////////////////////////////////////////////////////
+namespace boost { namespace spirit {
 
-#if !defined(BOOST_SPIRIT_USE_OLD_NAMESPACE)
-#define BOOST_SPIRIT_USE_OLD_NAMESPACE
-#endif
-#include <boost/spirit/include/classic_functor_parser.hpp>
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    //  functor_parser class
+    //
+    //      Once a functor parser has been defined, you can build a real
+    //      parser from it by passing it to this class as the template
+    //      parameter.
+    //
+    ///////////////////////////////////////////////////////////////////////////
+    template < class FunctorT >
+    struct functor_parser : public parser<functor_parser<FunctorT> >
+    {
+        FunctorT functor;
+
+        functor_parser(): functor() {}
+        functor_parser(FunctorT const& functor_): functor(functor_) {}
+
+        typedef typename FunctorT::result_t functor_result_t;
+        typedef functor_parser<FunctorT> self_t;
+
+        template <typename ScannerT>
+        struct result
+        {
+            typedef typename match_result<ScannerT, functor_result_t>::type
+            type;
+        };
+
+        template <typename ScannerT>
+        typename parser_result<self_t, ScannerT>::type
+        parse(ScannerT const& scan) const
+        {
+            typedef typename parser_result<self_t, ScannerT>::type result_t;
+            typedef typename ScannerT::value_t      value_t;
+            typedef typename ScannerT::iterator_t   iterator_t;
+
+            iterator_t const s(scan.first);
+            functor_result_t result;
+            int const len = functor(scan, result);
+
+            if (len < 0)
+                return scan.no_match();
+            else
+                return scan.create_match(len, result, s, scan.first);
+        }
+    };
+
+}} // namespace boost::spirit
 
 #endif

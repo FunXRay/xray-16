@@ -1,35 +1,30 @@
-
-// Copyright Aleksey Gurtovoy 2001-2006
+//-----------------------------------------------------------------------------
+// boost mpl/list/aux_/include_preprocessed.hpp header file
+// See http://www.boost.org for updates, documentation, and revision history.
+//-----------------------------------------------------------------------------
 //
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or copy at 
-// http://www.boost.org/LICENSE_1_0.txt)
+// Copyright (c) 2001-02
+// Aleksey Gurtovoy
 //
-// See http://www.boost.org/libs/mpl for documentation.
+// Permission to use, copy, modify, distribute and sell this software
+// and its documentation for any purpose is hereby granted without fee, 
+// provided that the above copyright notice appears in all copies and 
+// that both the copyright notice and this permission notice appear in 
+// supporting documentation. No representations are made about the 
+// suitability of this software for any purpose. It is provided "as is" 
+// without express or implied warranty.
 
-// $Id: include_preprocessed.hpp 49267 2008-10-11 06:19:02Z agurtovoy $
-// $Date: 2008-10-11 02:19:02 -0400 (Sat, 11 Oct 2008) $
-// $Revision: 49267 $
+// no include guards, the header is intended for multiple inclusion!
 
-// NO INCLUDE GUARDS, THE HEADER IS INTENDED FOR MULTIPLE INCLUSION!
+#include "boost/preprocessor/cat.hpp"
+#include "boost/preprocessor/stringize.hpp"
 
-#include <boost/mpl/aux_/config/workaround.hpp>
-
-#include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/stringize.hpp>
-
-#   define AUX778076_HEADER \
+#   define AUX_PREPROCESSED_HEADER \
     aux_/preprocessed/plain/BOOST_MPL_PREPROCESSED_HEADER \
 /**/
 
-#if BOOST_WORKAROUND(__IBMCPP__, BOOST_TESTED_AT(700))
-#   define AUX778076_INCLUDE_STRING BOOST_PP_STRINGIZE(boost/mpl/list/AUX778076_HEADER)
-#   include AUX778076_INCLUDE_STRING
-#   undef AUX778076_INCLUDE_STRING
-#else
-#   include BOOST_PP_STRINGIZE(boost/mpl/list/AUX778076_HEADER)
-#endif
+#   include BOOST_PP_STRINGIZE(boost/mpl/list/AUX_PREPROCESSED_HEADER)
 
-#   undef AUX778076_HEADER
+#   undef AUX_PREPROCESSED_HEADER
 
 #undef BOOST_MPL_PREPROCESSED_HEADER

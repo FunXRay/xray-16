@@ -1,10 +1,15 @@
 //  operator_return_type_traits.hpp -- Boost Lambda Library ------------------
 
-// Copyright (C) 1999, 2000 Jaakko Jarvi (jaakko.jarvi@cs.utu.fi)
+// Copyright (C) 1999, 2000 Jaakko Järvi (jaakko.jarvi@cs.utu.fi)
 //
-// Distributed under the Boost Software License, Version 1.0. (See
-// accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+// Permission to copy, use, sell and distribute this software is granted
+// provided this copyright notice appears in all copies. 
+// Permission to modify the code and to distribute modified code is granted
+// provided this copyright notice appears in all copies, and a notice 
+// that the code was modified is included with the copyright notice.
+//
+// This software is provided "as is" without express or implied warranty, 
+// and with no claim as to its suitability for any purpose.
 //
 // For more information, see www.boost.org
 
@@ -13,9 +18,6 @@
 
 #include "boost/lambda/detail/is_instance_of.hpp"
 #include "boost/type_traits/same_traits.hpp"
-
-#include "boost/indirect_reference.hpp"
-#include "boost/detail/container_fwd.hpp"
 
 #include <cstddef> // needed for the ptrdiff_t
 #include <iosfwd>  // for istream and ostream
@@ -58,6 +60,10 @@ template <> struct promote_code<long double> { static const int value = 700; };
 } // namespace detail
 } // namespace lambda 
 } // namespace boost
+
+namespace std {
+  template<class T> class complex;
+}
 
 namespace boost { 
 namespace lambda {
@@ -215,7 +221,7 @@ namespace detail {
 
   // A is a nonreference type
 template <class A> struct contentsof_type {
-  typedef typename boost::indirect_reference<A>::type type; 
+  typedef typename std::iterator_traits<A>::reference type; 
 };
 
   // this is since the nullary () in lambda_functor is always instantiated
@@ -225,15 +231,34 @@ template <> struct contentsof_type<null_type> {
 
 
 template <class A> struct contentsof_type<const A> {
-  typedef typename contentsof_type<A>::type type;
+  typedef typename contentsof_type<A>::type type1;
+  // return a reference to the underlying const type
+  // the IF is because the A::reference in the primary template could
+  // be some class type rather than a real reference, hence
+  // we do not want to make it a reference here either
+    typedef typename detail::IF<
+      is_reference<type1>::value, 
+      const typename boost::remove_reference<type1>::type &,
+      const type1
+  >::RET type;
 };
 
 template <class A> struct contentsof_type<volatile A> {
-  typedef typename contentsof_type<A>::type type;
+  typedef typename contentsof_type<A>::type type1;
+  typedef typename detail::IF<
+    is_reference<type1>::value, 
+    volatile typename boost::remove_reference<type1>::type &,
+    volatile type1
+  >::RET type;
 };
 
 template <class A> struct contentsof_type<const volatile A> {
-  typedef typename contentsof_type<A>::type type;
+  typedef typename contentsof_type<A>::type type1;
+  typedef typename detail::IF<
+    is_reference<type1>::value, 
+    const volatile typename boost::remove_reference<type1>::type &,
+    const volatile type1
+  >::RET type;
 };
 
   // standard iterator traits should take care of the pointer types 
@@ -467,6 +492,7 @@ struct promotion_of_unsigned_int
 {
         typedef
         detail::IF<sizeof(long) <= sizeof(unsigned int),        
+// I had the logic reversed but ">" messes up the parsing.
                 unsigned long,
                 long>::RET type; 
 };
@@ -831,6 +857,23 @@ struct return_type_2<other_action<subscript_action>, A, B> {
 
 };
 
+
+} // namespace lambda
+} // namespace boost
+
+
+namespace std {
+ template <class Key, class T, class Cmp, class Allocator> class map;
+ template <class Key, class T, class Cmp, class Allocator> class multimap;
+ template <class T, class Allocator> class vector;
+ template <class T, class Allocator> class deque;
+ template <class Char, class Traits, class Allocator> class basic_string;
+}
+
+
+namespace boost { 
+namespace lambda {
+
 template<class Key, class T, class Cmp, class Allocator, class B> 
 struct plain_return_type_2<other_action<subscript_action>, std::map<Key, T, Cmp, Allocator>, B> { 
   typedef T& type;
@@ -871,41 +914,6 @@ struct plain_return_type_2<other_action<subscript_action>, std::basic_string<Cha
 template<class Char, class Traits, class Allocator, class B> 
 struct plain_return_type_2<other_action<subscript_action>, const std::basic_string<Char, Traits, Allocator>, B> { 
   typedef typename std::basic_string<Char, Traits, Allocator>::const_reference type;
-};
-
-template<class Char, class Traits, class Allocator> 
-struct plain_return_type_2<arithmetic_action<plus_action>,
-                           std::basic_string<Char, Traits, Allocator>,
-                           std::basic_string<Char, Traits, Allocator> > { 
-  typedef std::basic_string<Char, Traits, Allocator> type;
-};
-
-template<class Char, class Traits, class Allocator> 
-struct plain_return_type_2<arithmetic_action<plus_action>,
-                           const Char*,
-                           std::basic_string<Char, Traits, Allocator> > { 
-  typedef std::basic_string<Char, Traits, Allocator> type;
-};
-
-template<class Char, class Traits, class Allocator> 
-struct plain_return_type_2<arithmetic_action<plus_action>,
-                           std::basic_string<Char, Traits, Allocator>,
-                           const Char*> { 
-  typedef std::basic_string<Char, Traits, Allocator> type;
-};
-
-template<class Char, class Traits, class Allocator, std::size_t N> 
-struct plain_return_type_2<arithmetic_action<plus_action>,
-                           Char[N],
-                           std::basic_string<Char, Traits, Allocator> > { 
-  typedef std::basic_string<Char, Traits, Allocator> type;
-};
-
-template<class Char, class Traits, class Allocator, std::size_t N> 
-struct plain_return_type_2<arithmetic_action<plus_action>,
-                           std::basic_string<Char, Traits, Allocator>,
-                           Char[N]> { 
-  typedef std::basic_string<Char, Traits, Allocator> type;
 };
 
 
