@@ -1,0 +1,10 @@
+code/engine/vs/
+intermediate/
+*.user
+*.vsidx
+*.db
+*.db-shm
+*.db-wal
+*.lock
+*.opendb
+*.vcproj
