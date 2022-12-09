@@ -1,5 +1,8 @@
 code/engine/vs/
 intermediate/
+binaries/
+libraries/
+
 *.user
 *.vsidx
 *.db
@@ -8,3 +11,6 @@ intermediate/
 *.lock
 *.opendb
 *.vcproj
+*.ipch
+*.suo
+*.pdb
