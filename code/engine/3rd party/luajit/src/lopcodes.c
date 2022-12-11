@@ -3,13 +3,9 @@
 ** See Copyright Notice in lua.h
 */
 
-
 #define lopcodes_c
-#define LUA_CORE
-
 
 #include "lopcodes.h"
-
 
 /* ORDER OP */
 

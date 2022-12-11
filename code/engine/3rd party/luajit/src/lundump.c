@@ -7,7 +7,6 @@
 #include <string.h>
 
 #define lundump_c
-#define LUA_CORE
 
 #include <lua/lua.h>
 

@@ -22,7 +22,6 @@
 #include <string.h>
 
 #define ltable_c
-#define LUA_CORE
 
 #include <lua/lua.h>
 

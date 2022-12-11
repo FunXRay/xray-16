@@ -10,7 +10,6 @@
 #include <string.h>
 
 #define lvm_c
-#define LUA_CORE
 
 #include <lua/lua.h>
 

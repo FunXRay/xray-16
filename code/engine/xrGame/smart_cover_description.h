@@ -11,7 +11,6 @@
 #include <boost/noncopyable.hpp>
 #include "smart_cover_detail.h"
 #include "graph_abstract.h"
-#include "debug_make_final.hpp"
 
 namespace smart_cover {
 
@@ -23,7 +22,6 @@ namespace transitions {
 }
 
 class description : 
-	private debug::make_final<description>, 
 	private boost::noncopyable, 
 	public  detail::intrusive_base_time
 {

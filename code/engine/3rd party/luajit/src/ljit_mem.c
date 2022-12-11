@@ -4,8 +4,6 @@
 */
 
 #define ljit_mem_c
-#define LUA_CORE
-
 #include <string.h>
 
 #include <lua/lua.h>

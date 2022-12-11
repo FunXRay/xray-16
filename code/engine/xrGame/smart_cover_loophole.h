@@ -20,7 +20,6 @@ namespace smart_cover {
 class object;
 
 class loophole : 
-	private debug::make_final<loophole>, 
 	private boost::noncopyable 
 {
 private:

@@ -55,7 +55,10 @@
 
 #include "OpenAL32.h"
 
-log_fn_ptr_type*	pLog = NULL;
+using log_fn_ptr_type = void*(const char*);
+
+log_fn_ptr_type*	pLog = nullptr;
+
 void AlLog(LPCSTR format, ...)
 {
 	if(pLog)

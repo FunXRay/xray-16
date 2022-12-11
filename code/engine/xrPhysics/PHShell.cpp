@@ -1026,38 +1026,32 @@ CPHElement* get_physics_parent( IKinematics &k,  u16 id )
 	}
 }
 static u16 element_position_in_set_calbacks=u16(-1);
-void CPHShell::SetCallbacks( )
-{
-	
-	struct set_bone_callback
-	{
-		void operator() ( CPHElement* e){e->SetBoneCallback(); }
-	};
-	std::for_each( elements.begin(), elements.end(), set_bone_callback() );
 
-	struct set_bone_reference: private boost::noncopyable
+void CPHShell::SetCallbacks()
+{
+	std::for_each(elements.begin(), elements.end(), [](CPHElement* e) { e->SetBoneCallback(); });
+
+	struct set_bone_reference
 	{
-		IKinematics &K;
-		set_bone_reference( IKinematics &K_ ): K( K_ ){}
-		void operator() ( u16 id )
+		IKinematics& K;
+		set_bone_reference(IKinematics& K_) : K(K_) {}
+		set_bone_reference(set_bone_reference&& other) : K(other.K) {}
+		set_bone_reference(const set_bone_reference& other1) = delete;
+		set_bone_reference& operator=(const set_bone_reference& other1) = delete;
+
+		void operator() (u16 id) const
 		{
-			CBoneInstance &bi  = K.LL_GetBoneInstance(id);
-			if(!bi.callback() || bi.callback_type() != bctPhysics  )
+			CBoneInstance& bi = K.LL_GetBoneInstance(id);
+			if (!bi.callback() || bi.callback_type() != bctPhysics)
 			{
-				CPHElement *root_e = get_physics_parent( K, id );
-				if( root_e && K.LL_GetBoneVisible( id ) )
-					bi.set_callback( bctPhysics, 0, cast_PhysicsElement( root_e ) );
+				CPHElement* root_e = get_physics_parent(K, id);
+				if (root_e && K.LL_GetBoneVisible(id))
+					bi.set_callback(bctPhysics, nullptr, cast_PhysicsElement(root_e));
 			}
 		}
 	};
-	for_each_bone_id( *PKinematics(), set_bone_reference( *PKinematics() ) );
-	
-	//element_position_in_set_calbacks=u16(-1);
-	
-	//SetCallbacksRecursive(m_pKinematics->LL_GetBoneRoot(),element_position_in_set_calbacks);
+	for_each_bone_id(*PKinematics(), set_bone_reference(*PKinematics()));
 }
-
-
 
 void CPHShell::SetCallbacksRecursive(u16 id,u16 element)
 {

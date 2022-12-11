@@ -13,7 +13,11 @@
   <ItemDefinitionGroup>
     <Link>
       <AdditionalLibraryDirectories>$(XLibOut);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ImportLibrary>$(XLibOut)\$(ProjectName).lib</ImportLibrary>
     </Link>
+    <ClCompile>
+      <PreprocessorDefinitions>_ALLOW_RTCc_IN_STL;_VC80_UPGRADE=0x0710;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="XBinOut">

@@ -14,7 +14,6 @@
 namespace smart_cover {
 
 class storage : 
-	private debug::make_final<storage>, 
 	private boost::noncopyable 
 {
 public:

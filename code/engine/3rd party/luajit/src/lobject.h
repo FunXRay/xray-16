@@ -73,8 +73,8 @@ typedef union {
 
 typedef struct lua_TValue {
   TValuefields;
-} LUA_TVALUE_ALIGN TValue;
-
+} LUA_TVALUE_ALIGN;
+typedef LUA_TVALUE_ALIGN TValue;
 
 /* Macros to test type */
 #define ttisnil(o)	(ttype(o) == LUA_TNIL)

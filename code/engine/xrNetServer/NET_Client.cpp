@@ -10,7 +10,7 @@
 #pragma warning(push)
 #pragma warning(disable:4995)
 #include <malloc.h>
-#include "dxerr.h"
+//#include "dxerr.h"
 
 //#pragma warning(pop)
 
@@ -450,7 +450,7 @@ if(!psNET_direct_connect)
 	//---------------------------	
 	if (CoCreateInstanceRes != S_OK)
 	{
-		DXTRACE_ERR(tmp, CoCreateInstanceRes );
+		//DXTRACE_ERR(tmp, CoCreateInstanceRes );
 		CHK_DX(CoCreateInstanceRes );
 	}	
 	//---------------------------
@@ -649,7 +649,7 @@ if(!psNET_direct_connect)
 
 //				const char* x = DXGetErrorString9(res);
 				string1024 tmp = "";
-				DXTRACE_ERR(tmp, res);
+				//DXTRACE_ERR(tmp, res);
 #endif				
 				c_port++;
 			}
@@ -698,8 +698,8 @@ if(!psNET_direct_connect)
 		_RELEASE					(pHostAddress);
 #ifdef DEBUG	
 //		const char* x = DXGetErrorString9(res);
-		string1024 tmp = "";
-		DXTRACE_ERR(tmp, res);
+		//string1024 tmp = "";
+		//DXTRACE_ERR(tmp, res);
 #endif
 		switch (res)
 		{
@@ -880,7 +880,7 @@ HRESULT	IPureClient::net_Handler(u32 dwMessageType, PVOID pMessage)
 					if (pMsg->hResultCode != S_OK)
 					{
 						string1024 tmp="";
-						DXTRACE_ERR(tmp, pMsg->hResultCode);
+						//DXTRACE_ERR(tmp, pMsg->hResultCode);
 					}					
 #endif
 					if (pMsg->dwApplicationReplyDataSize)
@@ -973,8 +973,8 @@ void	IPureClient::SendTo_LL(void* data, u32 size, u32 dwFlags, u32 dwTimeout)
 	{
 		Msg	("! ERROR: Failed to send net-packet, reason: %s",::Debug.error2string(hr));
 //		const char* x = DXGetErrorString9(hr);
-		string1024 tmp="";
-		DXTRACE_ERR(tmp, hr);
+		//string1024 tmp="";
+		//DXTRACE_ERR(tmp, hr);
 	}
 
 //	UpdateStatistic();

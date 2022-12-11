@@ -14,3 +14,4 @@ libraries/
 *.ipch
 *.suo
 *.pdb
+*.htm

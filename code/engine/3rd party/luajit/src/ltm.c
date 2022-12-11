@@ -8,7 +8,6 @@
 #include <string.h>
 
 #define ltm_c
-#define LUA_CORE
 
 #include <lua/lua.h>
 
