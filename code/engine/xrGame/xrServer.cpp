@@ -20,7 +20,6 @@
 #include "file_transfer.h"
 #include "screenshot_server.h"
 #include "xrServer_info.h"
-#include "stl/_function.h"
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -141,9 +140,7 @@ void		xrServer::client_Destroy	(IClient* C)
 	// Delete assosiated entity
 	// xrClientData*	D = (xrClientData*)C;
 	// CSE_Abstract* E = D->owner;
-	IClient* alife_client = net_players.FindAndEraseClient(
-		std::bind1st(std::equal_to<IClient*>(), C)
-	);
+	IClient* alife_client = net_players.FindAndEraseClient([&C](IClient* A)->bool {return A == C; });
 	//VERIFY(alife_client);
 	if (alife_client)
 	{
